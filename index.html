@@ -60,13 +60,20 @@
   [data-page][hidden] { display: none !important; }
   /* [hidden] 对任何带 author display 的元素（如 .btn）统一生效 */
   [hidden] { display: none !important; }
+  /* 下拉框空态占位：文字与输入框 placeholder 同灰 */
+  .select.is-placeholder { color: var(--label-3); }
+  /* 模块映射弹窗：宽版 + 行编辑网格 */
+  .sheet--wide { width: 620px; }
+  .map-head { display: grid; grid-template-columns: 150px 100px 1fr 28px; gap: var(--space-3); padding: 0 var(--space-2); }
+  .map-head span { font-size: var(--text-xs); color: var(--label-2); font-weight: var(--weight-medium); }
+  .map-row { display: grid; grid-template-columns: 150px 100px 1fr 28px; gap: var(--space-3); align-items: center; }
+  .sheet__foot .btn--sm { flex: none; }
 
   /* ---- 业务扩展（只引用令牌） ---- */
   /* 窗口模式下 .content 是定高纵向 flex：面板必须保持自然高度（内容超出交给
      .content 滚动），否则 flex-shrink 会把面板压瘪、overflow:hidden 裁掉 foot 按钮 */
   .content > .panel { flex: none; }
   .field--full { grid-column: 1 / -1; }
-  .panel__head .i { color: var(--label-2); margin-top: 1px; }
   .toast--out { opacity: 0; transition: opacity var(--dur-normal) var(--ease-out); }
 </style>
 </head>
@@ -74,20 +81,18 @@
 
 <!-- ===================== 图标精灵 ===================== -->
 <svg class="sprite" aria-hidden="true">
-  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
-  <symbol id="i-repo" viewBox="0 0 24 24"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
-  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
-  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3c.8 4.2 2.5 5.9 6.7 6.7-4.2.8-5.9 2.5-6.7 6.7-.8-4.2-2.5-5.9-6.7-6.7C8.5 8.9 10.2 7.2 11 3z"/><path d="M18.5 14c.4 2.1 1.3 3 3.4 3.4-2.1.4-3 1.3-3.4 3.4-.4-2.1-1.3-3-3.4-3.4 2.1-.4 3-1.3 3.4-3.4z"/></symbol>
-  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l4.8 4.8L19.5 6.8"/></symbol>
-  <symbol id="i-fetch" viewBox="0 0 24 24"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
-  <symbol id="i-compare" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></symbol>
-  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
-  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.6v2.6M12 18.8v2.6M4.4 7.4l2.2 1.3M17.4 15.3l2.2 1.3M4.4 16.6l2.2-1.3M17.4 8.7l2.2-1.3"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></symbol>
-</svg>
+    <!-- 仿 SF Symbols 风格：24 网格、圆角端点、几何对称 -->
+    <symbol id="i-config" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l4.8 4.8L19.5 6.8"/></symbol>
+    <symbol id="i-fetch" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-compare" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></symbol>
+  </svg>
 
 <div class="desk">
   <div class="win">
@@ -121,7 +126,7 @@
                       ③ PAGES 数组加名字 -->
       <nav class="sidebar">
         <div class="sidebar__heading">业务</div>
-        <div class="nav-item is-active" data-nav data-nav-page="setup"><svg class="i"><use href="#i-sliders"/></svg>基础配置</div>
+        <div class="nav-item is-active" data-nav data-nav-page="setup"><svg class="i"><use href="#i-config"/></svg>基础配置</div>
         <div class="nav-item" data-nav data-nav-page="fetch"><svg class="i"><use href="#i-fetch"/></svg>数据抓取</div>
         <div class="nav-item" data-nav data-nav-page="rules"><svg class="i"><use href="#i-compare"/></svg>比对规则</div>
         <div class="nav-item" data-nav data-nav-page="preview"><svg class="i"><use href="#i-eye"/></svg>生成预览</div>
@@ -139,7 +144,6 @@
           <!-- ---------- 基础配置 · ① 源代码获取 ---------- -->
           <section class="panel" id="panel-repo" data-page="setup" data-eid="panel-setup-repo">
             <div class="panel__head">
-              <svg class="i"><use href="#i-repo"/></svg>
               <span class="panel__title" data-etext>源代码获取</span>
               <span class="panel__sub">指向本地源码目录，分析时直接读取</span>
               <div class="spacer"></div>
@@ -155,6 +159,7 @@
               <span class="hint">路径需指向包含源码的文件夹</span>
               <div class="spacer"></div>
               <button class="btn btn--secondary btn--sm" id="repoTest" data-eid="btn-repo-test">测试连接</button>
+              <button class="btn btn--secondary btn--sm" id="mapOpen" data-eid="btn-map-open">映射配置</button>
               <button class="btn btn--primary btn--sm" id="repoSave" data-eid="btn-repo-save">保存配置</button>
             </div>
           </section>
@@ -162,7 +167,6 @@
           <!-- ---------- 基础配置 · ② codebeamer ---------- -->
           <section class="panel" id="panel-cb" data-page="setup" data-eid="panel-setup-cb" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-link"/></svg>
               <span class="panel__title" data-etext>codebeamer 配置</span>
               <span class="panel__sub">对接 ALM 平台，同步需求与工作项</span>
               <div class="spacer"></div>
@@ -195,7 +199,6 @@
           <!-- ---------- 基础配置 · ③ AI API ---------- -->
           <section class="panel" id="panel-ai" data-page="setup" data-eid="panel-setup-ai" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-spark"/></svg>
               <span class="panel__title" data-etext>AI API 配置</span>
               <span class="panel__sub">管理多套大模型接入配置，随时切换使用</span>
               <div class="spacer"></div>
@@ -219,7 +222,6 @@
           <!-- ---------- 业务 · 数据抓取 ---------- -->
           <section class="panel" id="panel-fetch" data-page="fetch" data-eid="panel-fetch" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-fetch"/></svg>
               <span class="panel__title" data-etext>数据抓取</span>
               <span class="panel__sub">从 codebeamer 拉取待分析的工作项</span>
               <div class="spacer"></div>
@@ -270,7 +272,6 @@
           <!-- ---------- 业务 · 比对规则 ---------- -->
           <section class="panel" id="panel-rules" data-page="rules" data-eid="panel-rules" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-compare"/></svg>
               <span class="panel__title" data-etext>比对规则</span>
               <span class="panel__sub">定义工作项与代码变更的比对与过滤规则</span>
               <div class="spacer"></div>
@@ -289,7 +290,6 @@
           <!-- ---------- 业务 · 生成预览 ---------- -->
           <section class="panel" id="panel-preview" data-page="preview" data-eid="panel-preview" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-eye"/></svg>
               <span class="panel__title" data-etext>生成预览</span>
               <span class="panel__sub">用 AI 按比对规则生成结果预览</span>
               <div class="spacer"></div>
@@ -339,7 +339,6 @@
           <!-- ---------- 业务 · 数据上传 ---------- -->
           <section class="panel" id="panel-upload" data-page="upload" data-eid="panel-upload" hidden>
             <div class="panel__head">
-              <svg class="i"><use href="#i-upload"/></svg>
               <span class="panel__title" data-etext>数据上传</span>
               <span class="panel__sub">将比对结果回传 codebeamer</span>
               <div class="spacer"></div>
@@ -458,12 +457,7 @@
             </div>
             <div class="field" data-eid="field-ai-model">
               <span class="label">模型</span>
-              <select class="select" id="aiModel">
-                <option value="gpt-4o">gpt-4o</option>
-                <option value="gpt-4o-mini">gpt-4o-mini</option>
-                <option value="claude-sonnet-4">claude-sonnet-4</option>
-                <option value="deepseek-chat">deepseek-chat</option>
-              </select>
+              <input class="input" id="aiModel" placeholder="例如：gpt-4o / claude-sonnet-4 / deepseek-chat" />
             </div>
             <div class="field" data-eid="field-ai-endpoint">
               <span class="label">API 地址</span>
@@ -476,16 +470,39 @@
             </div>
             <div class="field" data-eid="field-ai-conc">
               <span class="label">并发数</span>
-              <input class="input" id="aiConc" type="number" min="1" max="16" step="1" placeholder="4" />
-              <span class="hint">同时发起的模型请求数量（1–16，默认 4）</span>
+              <input class="input" id="aiConc" type="number" min="1" max="64" step="1" placeholder="4" />
+              <span class="hint">同时发起的模型请求数量（1–64，默认 4）</span>
             </div>
           </div>
         </div>
         <div class="sheet__foot">
           <button class="btn btn--destructive" id="aiSheetDelete" data-eid="btn-ai-delete" hidden>删除配置</button>
           <div class="spacer"></div>
-          <button class="btn" id="aiSheetCancel">取消</button>
-          <button class="btn btn--primary" id="aiSheetSave">保存</button>
+          <button class="btn btn--sm" id="aiSheetCancel">取消</button>
+          <button class="btn btn--primary btn--sm" id="aiSheetSave">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模块映射配置弹窗：模块名称 ↔ 代码路径 ↔ codebeamer ID -->
+    <div class="scrim" id="mapScrim" hidden>
+      <div class="sheet sheet--wide" data-eid="sheet-mapping">
+        <div class="sheet__head">
+          <div class="sheet__title">模块映射配置</div>
+          <div class="sheet__msg">绑定模块名称、本地代码路径与 codebeamer ID，保存后固化为自动配置文件</div>
+        </div>
+        <div class="sheet__body stack">
+          <div class="map-head" data-eid="map-head">
+            <span>模块名称</span><span>CB ID</span><span>代码路径</span><span></span>
+          </div>
+          <div id="mapRows" class="stack"></div>
+          <button class="btn btn--secondary btn--sm" id="mapAdd" data-eid="btn-map-add"><svg class="i i--sm"><use href="#i-plus"/></svg>添加模块</button>
+        </div>
+        <div class="sheet__foot">
+          <button class="btn btn--secondary btn--sm" id="mapExport" data-eid="btn-map-export">导出配置文件</button>
+          <div class="spacer"></div>
+          <button class="btn btn--sm" id="mapCancel" data-eid="btn-map-cancel">取消</button>
+          <button class="btn btn--primary btn--sm" id="mapSave" data-eid="btn-map-save">保存</button>
         </div>
       </div>
     </div>
@@ -643,6 +660,7 @@
     data.profiles = profiles;
     data.activeProfileId = activeId;
     data.previewDone = previewDone;
+    data.mappings = mappings;
     try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch {}
   }
 
@@ -715,6 +733,7 @@
       o.value = '';
       o.textContent = '暂无配置，点击「新建配置」创建';
       sel.appendChild(o);
+      sel.classList.add('is-placeholder');
       return;
     }
     for (const p of profiles) {
@@ -724,6 +743,7 @@
       sel.appendChild(o);
     }
     sel.value = activeId;
+    sel.classList.remove('is-placeholder');
     updatePreviewMeta();
   }
 
@@ -738,6 +758,7 @@
 
   /* ---- 弹窗：新建 / 编辑 ---- */
   let sheetMode = 'create';
+  let aiOpenedAt = 0;
 
   function openSheet(mode) {
     sheetMode = mode;
@@ -753,6 +774,8 @@
       x.classList.toggle('is-on', x.dataset.val === proto);
     });
     el('aiSheetDelete').hidden = mode !== 'edit';
+    mapScrim.hidden = true;
+    aiOpenedAt = Date.now();
     aiScrim.hidden = false;
   }
 
@@ -766,7 +789,10 @@
     openSheet('edit');
   });
   el('aiSheetCancel').addEventListener('click', closeSheet);
-  aiScrim.addEventListener('click', (e) => { if (e.target === aiScrim) closeSheet(); });
+  /* 点遮罩关闭；刚打开 300ms 内忽略——防止快速连点被误判成"点外部"而秒关 */
+  aiScrim.addEventListener('click', (e) => {
+    if (e.target === aiScrim && Date.now() - aiOpenedAt > 300) closeSheet();
+  });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !aiScrim.hidden) closeSheet();
   });
@@ -775,7 +801,7 @@
     const name = el('aiName').value.trim();
     const endpoint = el('aiEndpoint').value.trim();
     const key = el('aiKey').value.trim();
-    const conc = Math.max(1, Math.min(16, parseInt(el('aiConc').value, 10) || 4));
+    const conc = Math.max(1, Math.min(64, parseInt(el('aiConc').value, 10) || 4));
     const on = document.querySelector('#aiProtoSeg .segmented__item.is-on');
     if (sheetMode === 'create') {
       const p = {
@@ -974,6 +1000,83 @@
       seg.querySelectorAll('.segmented__item').forEach((x) => x.classList.remove('is-on'));
       item.classList.add('is-on');
     });
+  });
+
+  /* ============================================================
+     模块映射配置：模块名称 ↔ 本地代码路径 ↔ codebeamer ID
+     保存后固化到本机存储，并可导出 module-mapping.json 配置文件
+     ============================================================ */
+  let mappings = Array.isArray(saved.mappings) ? saved.mappings : [];
+  const mapScrim = el('mapScrim');
+  let mapOpenedAt = 0;
+
+  function mapRowEl(data) {
+    const row = document.createElement('div');
+    row.className = 'map-row';
+    row.innerHTML =
+      '<input class="input" data-f="name" placeholder="模块名称" />' +
+      '<input class="input" data-f="cbId" placeholder="CB ID" />' +
+      '<input class="input" data-f="path" placeholder="D:\\path\\module" />' +
+      '<button class="btn btn--secondary btn--icon btn--sm" data-del title="删除该模块">×</button>';
+    row.querySelector('[data-f=name]').value = data.name || '';
+    row.querySelector('[data-f=cbId]').value = data.cbId || '';
+    row.querySelector('[data-f=path]').value = data.path || '';
+    row.querySelector('[data-del]').addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  function renderMapRows(list) {
+    const box = el('mapRows');
+    box.innerHTML = '';
+    const src = list.length ? list : [{ name: '', cbId: '', path: '' }];
+    for (const item of src) box.appendChild(mapRowEl(item));
+  }
+
+  function collectMapRows() {
+    const out = [];
+    document.querySelectorAll('#mapRows .map-row').forEach((row) => {
+      const name = row.querySelector('[data-f=name]').value.trim();
+      const cbId = row.querySelector('[data-f=cbId]').value.trim();
+      const path = row.querySelector('[data-f=path]').value.trim();
+      if (name || cbId || path) out.push({ name: name, cbId: cbId, path: path });
+    });
+    return out;
+  }
+
+  el('mapOpen').addEventListener('click', () => {
+    renderMapRows(mappings);
+    aiScrim.hidden = true;
+    mapOpenedAt = Date.now();
+    mapScrim.hidden = false;
+  });
+  el('mapAdd').addEventListener('click', () => el('mapRows').appendChild(mapRowEl({})));
+  el('mapCancel').addEventListener('click', () => { mapScrim.hidden = true; });
+  /* 点遮罩关闭；刚打开 300ms 内忽略——防止快速连点被误判成"点外部"而秒关 */
+  mapScrim.addEventListener('click', (e) => {
+    if (e.target === mapScrim && Date.now() - mapOpenedAt > 300) mapScrim.hidden = true;
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !mapScrim.hidden) mapScrim.hidden = true;
+  });
+
+  el('mapSave').addEventListener('click', () => {
+    mappings = collectMapRows();
+    saveAll();
+    mapScrim.hidden = true;
+    toast('已保存', mappings.length + ' 条模块映射已固化为配置');
+  });
+
+  el('mapExport').addEventListener('click', () => {
+    const data = collectMapRows();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-mapping.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+    toast('已导出', 'module-mapping.json 已生成');
   });
 
   /* ---------- URL 参数，方便截图与演示分享 ----------

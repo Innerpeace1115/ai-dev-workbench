@@ -607,7 +607,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* 强调色选择器用的小圆点 */
 .swatch {
-  width: 18px; height: 18px;
+  width: 16px; height: 16px;
   border-radius: var(--radius-full);
   cursor: default;
   box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2);
